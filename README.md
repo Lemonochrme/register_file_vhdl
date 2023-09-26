@@ -23,5 +23,3 @@ Le Banc de Registres Double Port est conçu pour gérer un ensemble de 16 regist
 - @W, W, DATA : Signaux pour l'écriture dans le registre spécifié.
 - QA et QB : Sorties des valeurs lues depuis les registres.
 - QX : Sortie pour le traitement de l'aléa de données.
-
-Le Banc de Registres Double Port est conçu pour être utilisé dans des systèmes où une gestion efficace des registres est nécessaire, notamment dans les processeurs.
