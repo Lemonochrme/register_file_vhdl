@@ -19,24 +19,26 @@ end reg;
 
 architecture behavior_reg of reg is
     -- Array of STD_LOGIC_VECTOR
-    type memory_array is array(3 downto 0) of
+    type memory_array is array(0 to 15) of
         STD_LOGIC_VECTOR(7 downto 0);
     -- Memory variable
     signal memory: memory_array;
 begin
     
     -- Convert address_A and address_B to integers
-    A_Data <= memory(CONV_INTEGER(unsigned(address_A AND "0011")));
-    B_Data <= memory(CONV_INTEGER(unsigned(address_B AND "0011")));
+    -- Using Bypass to avoid delay between Read Data and Write Data if they are at the same time called (WEnable = 1)
+    A_Data <= memory(CONV_INTEGER(unsigned(address_A))) when (W_Enable = '0' or address_A /= address_W)
+        else W_Data;
+    
+    B_Data <= memory(CONV_INTEGER(unsigned(address_B))) when (W_Enable = '0' or address_B /= address_W)
+        else W_Data;
     
     -- Write data synchronously
     process(address_W, W_Enable, W_Data, reset, clk) is
     begin
         -- Reset the memory if shutdown
         if reset = '0' then
-            for i in memory_array'range loop
-                memory(i) <= "00000000";
-            end loop;
+            memory <= (others => "00000000");
         end if;
         -- Else Doing writing routine at each clock tick
         if reset = '1' then
